@@ -12,6 +12,16 @@ Define el comando que se ejecutará para verificar el estado del contenedor. Est
 El **|| exit 1** se utiliza para asegurarse de que el comando retorne un código de salida diferente de 0 si la verificación de salud falla. Esto es importante porque Docker interpreta un código de salida diferente de 0 como un fallo en el Healthcheck, lo que puede llevar a que Docker marque el contenedor como no saludable y tome las medidas configuradas por ejemplo reiniciar el contenedor.
 Si no se incluye || exit 1, el comando debe ser cuidadosamente diseñado para devolver un código de salida diferente de 0 en caso de fallo, de lo contrario Docker puede interpretar incorrectamente el estado de salud del contenedor.
 
+| **Caso de Uso**                                 | **Comando de Salud (`--health-cmd`)**                                      |
+|-------------------------------------------------|--------------------------------------------------------------------------|
+| **Para un servidor web**                        | `--health-cmd="curl -f http://localhost/ || exit 1""`                     |
+| **Para un servidor de base de datos**           | `--health-cmd="mysqladmin ping -h localhost -u root --password=rootpassword || exit 1"` |
+| **Para un servicio que proporciona una API**    | `--health-cmd="wget --spider http://localhost:8080/health || exit 1"`    |
+| **Para verificar un proceso específico**        | `--health-cmd="pgrep my_process_name || exit 1"`                         |
+| **Para comprobar la existencia de un archivo**  | `--health-cmd="test -f /path/to/your/file || exit 1"`                    |
+| **Para verificar un puerto específico**         | `--health-cmd="nc -z localhost 8080 || exit 1"`                          |
+
+
 Para un servidor web (usando curl):
 
 --health-cmd="curl -f http://localhost/ || exit 1"
